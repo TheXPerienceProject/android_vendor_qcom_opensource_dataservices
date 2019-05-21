@@ -591,6 +591,30 @@ int rtrmnet_ctl_changevnd(rmnetctl_hndl_t *hndl, char *devname, char *vndname,
 			  uint16_t *error_code, uint8_t  index,
 			  uint32_t flagconfig);
 
+/* @brief Public API to retrieve configuration of a virtual device node
+ * @details Message type is RTM_GETLINK
+ * @param hndl RmNet handle for the Netlink message
+ * @param vndname Name of virtual device to query
+ * @param error_code Status code of this operation returned from the kernel
+ * @param mux_id Where to store the value of the node's mux id
+ * @param flagconfig Where to store the value of the node's data format flags
+ * @param agg_count Where to store the value of the node's maximum packet count
+ * for uplink aggregation
+ * @param agg_size Where to store the value of the node's maximum byte count
+ * for uplink aggregation
+ * @param agg_time Where to store the value of the node's maximum time limit
+ * for uplink aggregation
+ * @return RMNETCTL_SUCCESS if successful
+ * @return RMNETCTL_LIB_ERR if there was a library error. Check error_code
+ * @return RMNETCTL_KERNEL_ERR if there was an error in the kernel.
+ * Check error_code
+ * @return RMNETCTL_INVALID_ARF if invalid arguments were passed to the API
+ */
+int rtrmnet_ctl_getvnd(rmnetctl_hndl_t *hndl, char *vndname,
+		       uint16_t *error_code, uint16_t *mux_id,
+		       uint32_t *flagconfig, uint16_t *agg_count,
+		       uint16_t *agg_size, uint32_t *agg_time);
+
 /* @brief Public API to bridge a vnd and device
  * @details Message type is RTM_NEWLINK
  * @param hndl RmNet handle for the Netlink message
@@ -605,6 +629,30 @@ int rtrmnet_ctl_changevnd(rmnetctl_hndl_t *hndl, char *devname, char *vndname,
  */
 int rtrmnet_ctl_bridgevnd(rmnetctl_hndl_t *hndl, char *devname, char *vndname,
 			  uint16_t *error_code);
+
+/* @brief Public API to configure the uplink aggregation parameters
+ * used by the RmNet driver
+ * @details Message type is RMN_NEWLINK
+ * @param hndl RmNet handle for the Netlink message
+ * @param devname Name of device node is connected to
+ * @param vndname Name of virtual device
+ * @param packet_count Maximum number of packets to aggregate
+ * @param byte_count Maximum number of bytes to aggregate
+ * @param time_limit Maximum time to aggregate
+ * @param error_code Status code of this operation returned from the kernel
+ * @return RMNETCTL_SUCCESS if successful
+ * @return RMENTCTL_LIB_ERR if there was a library error. Check error_code
+ * @return RMNETCTL_KERNEL_ERR if there was an error in the kernel.
+ * Check error_code
+ * @return RMNETCTL_INVALID_ARG if invalid arguments were passed to the API
+ */
+int rtrmnet_set_uplink_aggregation_params(rmnetctl_hndl_t *hndl,
+					  char *devname,
+					  char *vndname,
+					  uint8_t packet_count,
+					  uint16_t byte_count,
+					  uint32_t time_limit,
+					  uint16_t *error_code);
 
 int rtrmnet_activate_flow(rmnetctl_hndl_t *hndl,
 			  char *devname,
@@ -650,6 +698,18 @@ int rtrmnet_flow_state_up(rmnetctl_hndl_t *hndl,
 			  uint32_t ifaceid,
 			  int flags,
 			  uint16_t *error_code);
+
+int rtrmnet_set_qmi_scale(rmnetctl_hndl_t *hndl,
+			  char *devname,
+			  char *vndname,
+			  uint32_t scale,
+			  uint16_t *error_code);
+
+int rtrmnet_set_wda_freq(rmnetctl_hndl_t *hndl,
+			 char *devname,
+			 char *vndname,
+			 uint32_t freq,
+			 uint16_t *error_code);
 
 #endif /* not defined LIBRMNETCTL_H */
 
